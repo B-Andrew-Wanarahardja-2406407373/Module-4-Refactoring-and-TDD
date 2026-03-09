@@ -1,5 +1,7 @@
 package id.ac.ui.cs.advprog.eshop.model;
 
+import id.ac.ui.cs.advprog.eshop.enums.PaymentMethod;
+import id.ac.ui.cs.advprog.eshop.enums.PaymentStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -14,8 +16,8 @@ public class PaymentTest {
     void setup() {
         Payment payment = new Payment();
         payment.setId("00000000-0000-0000-0000-000000000000");
-        payment.setMethod("Voucher Code");
-        payment.setStatus("PENDING");
+        payment.setMethod(PaymentMethod.CASH_ON_DELIVERY.getValue());
+        payment.setStatus(PaymentStatus.PENDING.getValue());
 
         this.payment = payment;
     }
@@ -26,8 +28,8 @@ public class PaymentTest {
     }
 
     @Test
-    void testPaymentmethod() {
-        assertEquals("Voucher Code", this.payment.getMethod());
+    void testPaymentMethod() {
+        assertEquals("CASH_ON_DELIVERY", this.payment.getMethod());
     }
 
     @Test
