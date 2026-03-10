@@ -1,5 +1,7 @@
 package id.ac.ui.cs.advprog.eshop.service;
 
+import id.ac.ui.cs.advprog.eshop.enums.OrderStatus;
+import id.ac.ui.cs.advprog.eshop.enums.PaymentStatus;
 import id.ac.ui.cs.advprog.eshop.model.Order;
 import id.ac.ui.cs.advprog.eshop.model.Payment;
 import id.ac.ui.cs.advprog.eshop.repository.PaymentRepository;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Service @Getter
 public class PaymentServiceImpl implements PaymentService {
@@ -17,26 +20,52 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public Payment addPayment(Order order, String method, Map<String, String> paymentData) {
-        return null;
+        Payment payment = new Payment();
+        payment.setId(UUID.randomUUID().toString());
+        payment.setStatus(PaymentStatus.PENDING.getValue());
+        payment.setMethod(method);
+        payment.setPaymentData(paymentData);
+        payment.setOrder(order);
+        paymentRepository.addPayment(payment);
+
+        order.setPayment(payment);
+        return payment;
     }
 
     @Override
     public Payment setStatus(Payment payment, String status) {
-        return null;
+        Payment foundPayment = paymentRepository.getPayment(payment.getId());
+        if (foundPayment.equals(null)) return null;
+
+        Order order = foundPayment.getOrder();
+        if (status.equals(PaymentStatus.SUCCESS.getValue())) {
+            foundPayment.setStatus(status);
+            order.setStatus(OrderStatus.SUCCESS.getValue());
+
+        } else if (status.equals(PaymentStatus.REJECTED.getValue())) {
+            foundPayment.setStatus(status);
+            order.setStatus(OrderStatus.FAILED.getValue());
+
+        } else if (status.equals(PaymentStatus.CANCELLED.getValue())) {
+            foundPayment.setStatus(status);
+            order.setStatus(OrderStatus.CANCELLED.getValue());
+        }
+
+        return foundPayment;
     }
 
     @Override
     public Payment getPayment(String paymentId) {
-        return null;
+        return paymentRepository.getPayment(paymentId);
     }
 
     @Override
     public List<Payment> getAllPayments() {
-        return null;
+        return this.paymentRepository.getAllPayments();
     }
 
     @Override
     public int getSize() {
-        return 0;
+        return this.paymentRepository.getSize();
     }
 }

@@ -5,21 +5,35 @@ import id.ac.ui.cs.advprog.eshop.enums.PaymentMethod;
 import id.ac.ui.cs.advprog.eshop.enums.PaymentStatus;
 import id.ac.ui.cs.advprog.eshop.model.Order;
 import id.ac.ui.cs.advprog.eshop.model.Payment;
+import id.ac.ui.cs.advprog.eshop.model.Product;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class PaymentServiceImplTest {
     @InjectMocks
     private PaymentService paymentService = new PaymentServiceImpl();
-    private Order order = new Order("10000000-0000-0000-0000-000000000000",
-            new ArrayList<>(), 1708260000L,"Sampo Koski");
+    private Order order;
+
+    @BeforeEach
+    void setup() {
+        List<Product> products = new ArrayList<>();
+
+        Product product1 = new Product();
+        product1.setProductId("eb558e9f-1c39-440e-a860-71af6af63bd4");
+        product1.setProductName("Sampo Cap Bambang");
+        product1.setProductQuantity(2);
+
+        products.add(product1);
+        order = new Order("10000000-0000-0000-0000-000000000000",
+            products, 1708260000L,"Sampo Koski");
+    }
 
     @Test
     void testAddPayment() {
@@ -29,7 +43,8 @@ public class PaymentServiceImplTest {
         Payment added = paymentService.addPayment(order,
                 PaymentMethod.CASH_ON_DELIVERY.getValue(), new HashMap<String,String>());
 
-        assertFalse(order.getPayment().equals(null));
+        assertEquals(PaymentMethod.CASH_ON_DELIVERY.getValue(),added.getMethod());
+        assertEquals(PaymentStatus.PENDING.getValue(), added.getStatus());
         assertEquals(1, paymentService.getSize());
     }
 
@@ -41,7 +56,7 @@ public class PaymentServiceImplTest {
         payment.setMethod(PaymentMethod.VOUCHER_CODE.getValue());
         payment.setOrder(order);
         Payment result = paymentService.addPayment(order,
-                PaymentMethod.CASH_ON_DELIVERY.getValue(), new HashMap<String,String>());
+                PaymentMethod.VOUCHER_CODE.getValue(), new HashMap<String,String>());
 
         assertEquals(PaymentStatus.PENDING.getValue(), payment.getStatus());
         Payment updated = paymentService.setStatus(result, PaymentStatus.REJECTED.getValue());
@@ -58,7 +73,7 @@ public class PaymentServiceImplTest {
         payment.setMethod(PaymentMethod.VOUCHER_CODE.getValue());
         payment.setOrder(order);
         Payment result = paymentService.addPayment(order,
-                PaymentMethod.CASH_ON_DELIVERY.getValue(), new HashMap<String,String>());
+                PaymentMethod.VOUCHER_CODE.getValue(), new HashMap<String,String>());
 
         assertEquals(PaymentStatus.PENDING.getValue(), payment.getStatus());
         Payment updated = paymentService.setStatus(result, PaymentStatus.SUCCESS.getValue());
@@ -69,24 +84,19 @@ public class PaymentServiceImplTest {
 
     @Test
     void testGetPaymentFound() {
-        Payment payment = new Payment();
-        payment.setId("00000000-0000-0000-0000-000000000001");
-        payment.setStatus(PaymentStatus.PENDING.getValue());
-        payment.setMethod(PaymentMethod.VOUCHER_CODE.getValue());
         Payment result = paymentService.addPayment(order,
                 PaymentMethod.CASH_ON_DELIVERY.getValue(), new HashMap<String,String>());
 
-        Payment found = paymentService.getPayment("00000000-0000-0000-0000-000000000001");
+        Payment notFound = paymentService.getPayment("00000000-0000-0000-0000-000000000001");
+
+        String idInRepo = paymentService.getAllPayments().get(0).getId();
+        Payment found = paymentService.getPayment(idInRepo);
         assertEquals(PaymentStatus.PENDING.getValue(), found.getStatus());
-        assertEquals(PaymentMethod.VOUCHER_CODE.getValue(), found.getMethod());
+        assertEquals(PaymentMethod.CASH_ON_DELIVERY.getValue(), found.getMethod());
     }
 
     @Test
     void testGetPaymentNotFound() {
-        Payment payment = new Payment();
-        payment.setId("00000000-0000-0000-0000-000000000001");
-        payment.setStatus(PaymentStatus.PENDING.getValue());
-        payment.setMethod(PaymentMethod.VOUCHER_CODE.getValue());
         Payment result = paymentService.addPayment(order,
                 PaymentMethod.CASH_ON_DELIVERY.getValue(), new HashMap<String,String>());
 
@@ -100,20 +110,12 @@ public class PaymentServiceImplTest {
         List<Payment> paymentList = paymentService.getAllPayments();
         assertEquals(0, paymentList.size());
 
-        Payment payment1 = new Payment();
-        payment1.setId("00000000-0000-0000-0000-000000000001");
-        payment1.setStatus(PaymentStatus.PENDING.getValue());
-        payment1.setMethod(PaymentMethod.VOUCHER_CODE.getValue());
         Payment result1 = paymentService.addPayment(order,
                 PaymentMethod.CASH_ON_DELIVERY.getValue(), new HashMap<String,String>());
 
         paymentList = paymentService.getAllPayments();
         assertEquals(1, paymentList.size());
 
-        Payment payment2 = new Payment();
-        payment2.setId("00000000-0000-0000-0000-000000000002");
-        payment2.setStatus(PaymentStatus.PENDING.getValue());
-        payment2.setMethod(PaymentMethod.VOUCHER_CODE.getValue());
         Payment result2 = paymentService.addPayment(order,
                 PaymentMethod.CASH_ON_DELIVERY.getValue(), new HashMap<String,String>());
 
@@ -125,19 +127,11 @@ public class PaymentServiceImplTest {
     void testGetSize() {
         assertEquals(0, paymentService.getSize());
 
-        Payment payment1 = new Payment();
-        payment1.setId("00000000-0000-0000-0000-000000000001");
-        payment1.setStatus(PaymentStatus.PENDING.getValue());
-        payment1.setMethod(PaymentMethod.VOUCHER_CODE.getValue());
         Payment result1 = paymentService.addPayment(order,
                 PaymentMethod.CASH_ON_DELIVERY.getValue(), new HashMap<String,String>());
 
         assertEquals(1, paymentService.getSize());
 
-        Payment payment2 = new Payment();
-        payment2.setId("00000000-0000-0000-0000-000000000002");
-        payment2.setStatus(PaymentStatus.PENDING.getValue());
-        payment2.setMethod(PaymentMethod.VOUCHER_CODE.getValue());
         Payment result2 = paymentService.addPayment(order,
                 PaymentMethod.CASH_ON_DELIVERY.getValue(), new HashMap<String,String>());
 
