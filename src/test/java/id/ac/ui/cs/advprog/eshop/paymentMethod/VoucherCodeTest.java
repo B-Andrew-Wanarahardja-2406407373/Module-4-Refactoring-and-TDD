@@ -133,7 +133,7 @@ public class VoucherCodeTest {
     @Test
     void testValidateFailTooFewNumbers() {
         Map<String, String> paymentData = new HashMap<>();
-        paymentData.put("voucherCode","ESHOP1234567abc0");
+        paymentData.put("voucherCode","ESHOP1234567abcd");
         invalidPayment.setPaymentData(paymentData);
 
         assertFalse(voucher.validate(invalidPayment));
