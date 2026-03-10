@@ -74,7 +74,7 @@ public class CashOnDeliveryTest {
         paymentData.put("deliveryFee", "100");
         validPayment.setPaymentData(paymentData);
 
-        Payment result = COD.checkDeliveryAndAddress(validPayment);
+        Payment result = COD.checkDetails(validPayment);
         Order orderResult = result.getOrder();
 
         assertEquals(PaymentStatus.SUCCESS.getValue(), result.getStatus());
@@ -91,7 +91,7 @@ public class CashOnDeliveryTest {
         paymentData.put("deliveryFee", "");
         invalidPayment.setPaymentData(paymentData);
 
-        Payment result = COD.checkDeliveryAndAddress(invalidPayment);
+        Payment result = COD.checkDetails(invalidPayment);
         Order orderResult = result.getOrder();
 
         assertEquals(PaymentStatus.REJECTED.getValue(), result.getStatus());

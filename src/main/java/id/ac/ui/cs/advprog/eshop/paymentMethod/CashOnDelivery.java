@@ -1,12 +1,13 @@
 package id.ac.ui.cs.advprog.eshop.paymentMethod;
 
 import id.ac.ui.cs.advprog.eshop.enums.OrderStatus;
+
 import id.ac.ui.cs.advprog.eshop.enums.PaymentStatus;
 import id.ac.ui.cs.advprog.eshop.model.Order;
 import id.ac.ui.cs.advprog.eshop.model.Payment;
 
-public class CashOnDelivery {
-    public Payment checkDeliveryAndAddress(Payment payment) {
+public class CashOnDelivery implements PaymentMethodStrategy {
+    public Payment checkDetails(Payment payment) {
         boolean is_valid = validate(payment);
         Payment result = changePaymentStatus(payment, is_valid);
         return result;

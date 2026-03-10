@@ -1,9 +1,14 @@
 package id.ac.ui.cs.advprog.eshop.service;
 
 import id.ac.ui.cs.advprog.eshop.enums.OrderStatus;
+import id.ac.ui.cs.advprog.eshop.enums.PaymentMethod;
 import id.ac.ui.cs.advprog.eshop.enums.PaymentStatus;
 import id.ac.ui.cs.advprog.eshop.model.Order;
 import id.ac.ui.cs.advprog.eshop.model.Payment;
+import id.ac.ui.cs.advprog.eshop.paymentMethod.CashOnDelivery;
+import id.ac.ui.cs.advprog.eshop.paymentMethod.PaymentMethodFactory;
+import id.ac.ui.cs.advprog.eshop.paymentMethod.PaymentMethodStrategy;
+import id.ac.ui.cs.advprog.eshop.paymentMethod.VoucherCode;
 import id.ac.ui.cs.advprog.eshop.repository.PaymentRepository;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,15 +22,19 @@ import java.util.UUID;
 public class PaymentServiceImpl implements PaymentService {
     @Autowired
     private PaymentRepository paymentRepository = new PaymentRepository();
+    private PaymentMethodStrategy strategy;
 
     @Override
     public Payment addPayment(Order order, String method, Map<String, String> paymentData) {
         Payment payment = new Payment();
         payment.setId(UUID.randomUUID().toString());
-        payment.setStatus(PaymentStatus.PENDING.getValue());
         payment.setMethod(method);
         payment.setPaymentData(paymentData);
         payment.setOrder(order);
+
+        strategy = PaymentMethodFactory.getStrategy(method);
+        payment = strategy.checkDetails(payment);
+
         paymentRepository.addPayment(payment);
 
         order.setPayment(payment);

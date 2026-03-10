@@ -44,7 +44,7 @@ public class PaymentServiceImplTest {
                 PaymentMethod.CASH_ON_DELIVERY.getValue(), new HashMap<String,String>());
 
         assertEquals(PaymentMethod.CASH_ON_DELIVERY.getValue(),added.getMethod());
-        assertEquals(PaymentStatus.PENDING.getValue(), added.getStatus());
+        assertEquals(PaymentStatus.REJECTED.getValue(), added.getStatus());
         assertEquals(1, paymentService.getSize());
     }
 
@@ -91,7 +91,7 @@ public class PaymentServiceImplTest {
 
         String idInRepo = paymentService.getAllPayments().get(0).getId();
         Payment found = paymentService.getPayment(idInRepo);
-        assertEquals(PaymentStatus.PENDING.getValue(), found.getStatus());
+        assertEquals(PaymentStatus.REJECTED.getValue(), found.getStatus());
         assertEquals(PaymentMethod.CASH_ON_DELIVERY.getValue(), found.getMethod());
     }
 

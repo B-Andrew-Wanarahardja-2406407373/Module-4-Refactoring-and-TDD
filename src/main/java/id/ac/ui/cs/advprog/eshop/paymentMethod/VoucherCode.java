@@ -1,9 +1,12 @@
 package id.ac.ui.cs.advprog.eshop.paymentMethod;
 
-import id.ac.ui.cs.advprog.eshop.enums.OrderStatus;import id.ac.ui.cs.advprog.eshop.enums.PaymentStatus;import id.ac.ui.cs.advprog.eshop.model.Order;import id.ac.ui.cs.advprog.eshop.model.Payment;
+import id.ac.ui.cs.advprog.eshop.enums.OrderStatus;
+import id.ac.ui.cs.advprog.eshop.enums.PaymentStatus;
+import id.ac.ui.cs.advprog.eshop.model.Order;
+import id.ac.ui.cs.advprog.eshop.model.Payment;
 
-public class VoucherCode {
-    public Payment checkVoucher(Payment payment) {
+public class VoucherCode implements PaymentMethodStrategy {
+    public Payment checkDetails(Payment payment) {
         boolean isValid = validate(payment);
         Payment result = changePaymentStatus(payment, isValid);
         return result;

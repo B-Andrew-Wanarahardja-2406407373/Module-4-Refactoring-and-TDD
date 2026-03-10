@@ -71,7 +71,7 @@ public class VoucherCodeTest {
         paymentData.put("voucherCode","ESHOP12345678abc");
         validPayment.setPaymentData(paymentData);
 
-        Payment result = voucher.checkVoucher(validPayment);
+        Payment result = voucher.checkDetails(validPayment);
         Order orderResult = result.getOrder();
 
         assertEquals(PaymentStatus.SUCCESS.getValue(), result.getStatus());
@@ -87,7 +87,7 @@ public class VoucherCodeTest {
         paymentData.put("voucherCode","ESHO012345678abcd");
         invalidPayment.setPaymentData(paymentData);
 
-        Payment result = voucher.checkVoucher(invalidPayment);
+        Payment result = voucher.checkDetails(invalidPayment);
         Order orderResult = result.getOrder();
 
         assertEquals(PaymentStatus.REJECTED.getValue(), result.getStatus());
