@@ -11,6 +11,8 @@ public class VoucherCode {
 
     public boolean validate(Payment payment) {
         String voucher = payment.getPaymentData().get("voucherCode");
+        if (voucher == null) return false;
+
         int count = 0;
         for (int index = 0; index < voucher.length(); index++) {
             if (Character.isDigit(voucher.charAt(index))) {
