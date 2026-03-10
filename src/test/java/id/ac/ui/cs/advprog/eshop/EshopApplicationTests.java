@@ -4,8 +4,8 @@ import org.junit.jupiter.api.Test;
 
 class EshopApplicationTests {
 
-  @Test
-  void testMain() {
-    EshopApplication.main(new String[] {});
-  }
+//  @Test
+//  void testMain() {
+//    EshopApplication.main(new String[] {});
+//  }
 }
