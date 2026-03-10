@@ -9,7 +9,7 @@ import org.mockito.InjectMocks;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class PaymentRepositoryTest {
     @InjectMocks
@@ -37,7 +37,7 @@ public class PaymentRepositoryTest {
     }
 
     @Test
-    void testSetStatus() {
+    void testSetStatusFound() {
         Payment payment = new Payment();
         payment.setId("00000000-0000-0000-0000-000000000001");
         payment.setStatus(PaymentStatus.PENDING.getValue());
@@ -50,7 +50,18 @@ public class PaymentRepositoryTest {
     }
 
     @Test
-    void testGetPaymentById() {
+    void testSetStatusNotFound() {
+        Payment payment = new Payment();
+        payment.setId("00000000-0000-0000-0000-000000000001");
+        payment.setStatus(PaymentStatus.PENDING.getValue());
+        payment.setMethod(PaymentMethod.VOUCHER_CODE.getValue());
+
+        Payment edited = paymentRepository.setStatus(payment, "00000000-0000-0000-0000-000000000000");
+        assertNull(edited);
+    }
+
+    @Test
+    void testGetPaymentByIdFound() {
         Payment payment = new Payment();
         payment.setId("00000000-0000-0000-0000-000000000001");
         payment.setStatus(PaymentStatus.PENDING.getValue());
@@ -60,6 +71,12 @@ public class PaymentRepositoryTest {
         Payment get = paymentRepository.getPayment("00000000-0000-0000-0000-000000000001");
         assertEquals(PaymentStatus.PENDING.getValue(), get.getStatus());
         assertEquals(PaymentMethod.VOUCHER_CODE.getValue(), get.getMethod());
+    }
+
+    @Test
+    void testGetPaymentByIdNotFound() {
+        Payment get = paymentRepository.getPayment("00000000-0000-0000-0000-000000000001");
+        assertNull(get);
     }
 
     @Test

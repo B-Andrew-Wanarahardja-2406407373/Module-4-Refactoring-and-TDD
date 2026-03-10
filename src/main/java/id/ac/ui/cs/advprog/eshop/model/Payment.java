@@ -13,4 +13,13 @@ public class Payment {
     private String method;
     private String status;
     private Map<String, String> paymentData;
+
+    public Payment(String id, String method, Map<String, String> paymentData) {
+        this.id = id;
+        this.method = method;
+        this.status = PaymentStatus.PENDING.getValue();
+        this.paymentData = paymentData;
+    }
+
+    public Payment() {}
 }
