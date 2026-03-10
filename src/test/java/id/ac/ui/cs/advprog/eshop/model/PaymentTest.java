@@ -5,6 +5,7 @@ import id.ac.ui.cs.advprog.eshop.enums.PaymentStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashMap;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -18,7 +19,7 @@ public class PaymentTest {
         payment.setId("00000000-0000-0000-0000-000000000000");
         payment.setMethod(PaymentMethod.CASH_ON_DELIVERY.getValue());
         payment.setStatus(PaymentStatus.PENDING.getValue());
-
+        payment.setPaymentData(new HashMap<String, String>());
         this.payment = payment;
     }
 

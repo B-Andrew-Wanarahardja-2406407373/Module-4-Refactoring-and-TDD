@@ -5,7 +5,6 @@ import lombok.*;
 
 import java.util.List;
 
-@Builder
 @Getter
 public class Order {
 
@@ -14,6 +13,7 @@ public class Order {
     Long orderTime;
     String author;
     String status;
+    Payment payment;
 
     public Order(String id, List<Product> products, Long orderTime, String author) {
         this.id = id;
@@ -39,5 +39,9 @@ public class Order {
         } else {
             throw new IllegalArgumentException();
         }
+    }
+
+    public void setPayment(Payment payment) {
+        this.payment = payment;
     }
 }
